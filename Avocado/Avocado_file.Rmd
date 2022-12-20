@@ -1,0 +1,138 @@
+---
+title: "ABC Company Avocado sells"
+author: "George.B"
+date: "2022-12-11"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+# SUMMARY
+* What season is more profitable of selling Avocado fruits.
+* Research shows that there are four season in the united state of america.
+* According to my research the best time to sell Avocado is February(Winter) and March(Springs) and July(Summer).
+
+## Cleaning and Wrangling the Data
+
+```{r echo=FALSE}
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(skimr)
+library(lubridate)
+library(tidyr)
+library(ggplot2)
+library(colorspace)
+```
+
+* loading all necessary packages needed for analysing the data.
+
+```{r echo=FALSE}
+library(readr)
+avocado1 <- read_csv("C:/Users/pc/Desktop/my project raw file/avocado dataset/avocado1.csv")
+View(avocado1)
+```
+
+* Importing the dataset
+
+```{r echo=FALSE}
+sapply(avocado1, class)
+```
+
+
+```{r echo=FALSE}
+avocado1$new_date <- mdy(avocado1$Date)
+```
+
+
+```{r echo=FALSE}
+avocado1$date <- as.Date(avocado1$new_date)
+avocado1$month <- format(as.Date(avocado1$date), "%m")
+avocado1$day <- format(as.Date(avocado1$date), "%d")
+```
+
+
+## Analysis and Visualization.
+Below is the graphical representation of my findings.
+
+
+```{r echo=FALSE}
+avocado4 <- avocado1 %>% 
+  group_by(month) %>% 
+  drop_na() %>% 
+  summarise(max_sb= max(Small_Bags), max_lb=max(Large_Bags), max_xlb=max(Xlarge_Bags))
+View(avocado4)
+```
+
+
+```{r echo=FALSE}
+print(avocado4)
+```
+
+* The table above shows the maximum amount of Small,Large, Xlarge bags of avocado sold in a month.
+
+```{r echo=FALSE}
+ggplot(data = avocado4)+
+  geom_col(mapping=aes(x=month, y=max_sb, fill=month))+
+  labs(title = "Avocado: Small Bags Sells", subtitle = "Amount of Small bags of Avocado Sold in a Month")
+```
+
+* About 13.3 million small bags of avocado was sold in the month of February alone and February has the highest amount of avocado sell followed by March with 12.5 million small bags avocado sells.
+
+
+```{r viz representation of Large bags of avocados, echo=FALSE}
+ggplot(data = avocado4)+
+  geom_col(mapping=aes(x=month, y=max_lb, fill=month))+
+  labs(title = "Avocado: Large Bags Sells", subtitle = "Amount of Large bags of Avocado Sold in a Month")
+```
+
+* As shown in the Chart above the month of February still has the highest amount of Avocado sell in Large bags of avocado with about 5.7 million  Large bags of avocado sell compare the rest of the months.
+
+```{r viz representation of Xlarge bags of avocados, echo=FALSE}
+ggplot(data = avocado4)+
+  geom_col(mapping=aes(x=month, y=max_xlb, fill=month))+
+  labs(title = "Avocado: Xlarge Bags Sells", subtitle = "Amount of Xlarge bags of Avocado Sold in a Month")
+```
+
+* the month of July has the largest sell  of Xlarge bags of avocado sell with the sells of over five hundred thousand sells.
+
+```{r year with the highest sell of avocado, echo=FALSE}
+ggplot(data=avocado1)+
+   geom_bar(mapping=aes(x=year, fill=type))+
+   labs(title = "highest sell year", subtitle = "year with the highest sell of avocado")
+```
+
+* The viz about shows that 2015 and 2016 has relative sell of avocado between the two year with a slightly higher sell in 2017, 
+* while 2018 recorded the lowest sell below 1800 sell, and both conventional avocado and organic avocado has the same amount of sells each year.
+
+
+```{r echo=FALSE}
+avocado5 <- avocado1 %>% 
+  group_by(month, type) %>%
+  drop_na() %>% 
+  summarise(mean_price=mean(AveragePrice))
+```
+
+```{r echo=FALSE}
+print(avocado5)
+```
+
+
+```{r average price per type in a month, echo=FALSE}
+ggplot(data=avocado5)+
+  geom_point(mapping = aes(x=month, y=mean_price))+
+  facet_wrap(~type)+
+  theme(axis.text.x = element_text(angle = 50))+
+  labs(title = "Conventional Avocado vs Oganic Avocado", subtitle = "Average Price of Conventional Against Organic")
+```
+
+* The table shows the average amount 1 avocado in a month.
+* average price per type(conventional vs organic) in a month, with Conventional avocado having an average price of 1.0 to 1.34 with February having the lowest $1.0 and the highest $1.34 of the October.
+* While Organic Avocado has an average price of lowest(1.53) to highest(1.85)  February(1.53) and September(1.85).
+
+## RECOMMENDATION
+#### *solution*
+* ABC Company should buy and store Avocados in bulk when it's not in demand and sell them when the season is right.
+* ABC Company should invest more in Small Bags and Large Bags of avocado and less in the xlarge Bags of avocado during the season of demand, that is because customer tend the buy more of the small and large bags than the xlarge bags.
+
